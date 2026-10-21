@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>代購下單頁</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap">
+<style>
+:root{--bg:#f2f5f1;--card:#fff;--ink:#1d3530;--sub:#5d716b;--line:#d5ded9;--acc:#8a4f6b;--accbg:#f3e6ec;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121c19;--card:#1b2a26;--ink:#e6efeb;--sub:#9db3ab;--line:#2f433d;--acc:#d9a0bb;--accbg:#35242d}}
+:root[data-theme="dark"]{--bg:#121c19;--card:#1b2a26;--ink:#e6efeb;--sub:#9db3ab;--line:#2f433d;--acc:#d9a0bb;--accbg:#35242d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans TC",system-ui,sans-serif;padding-bottom:150px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header{padding:36px 0 16px;border-bottom:2px solid var(--ink)}
+h1{font:900 clamp(26px,6vw,40px)/1.2 "Noto Serif TC",serif;margin:0}
+header p{margin:6px 0 0;color:var(--sub)}
+.notice mark{background:#ffe27a;color:#1d3530;font-weight:700;padding:0 3px;border-radius:3px}
+.notice{font-size:14px;margin:16px 0 0;padding:10px 14px;border-left:4px solid var(--acc);background:var(--accbg);border-radius:0 4px 4px 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.item h3{margin:0;font:600 16px/1.4 "Noto Serif TC",serif}
+.price{font-weight:700}
+.item.sold img,.item.sold h3{opacity:.45}
+.add:disabled{opacity:.5;cursor:not-allowed}
+.item img{width:100%;aspect-ratio:1;object-fit:contain;background:var(--bg);border-radius:4px}
+.tag{display:inline-block;font-size:12px;border-radius:3px;padding:1px 7px;background:var(--accbg);color:var(--acc);margin-right:4px}
+.tag.n{background:transparent;border:1px solid var(--line);color:var(--sub)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{min-width:40px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:4px;padding:3px 10px;font:inherit;cursor:pointer}
+.chips button[aria-pressed=true]{border-color:var(--acc);background:var(--accbg);color:var(--acc);font-weight:700}
+.row{display:flex;align-items:center;gap:8px;margin-top:auto}
+.step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:4px}
+.step button{width:30px;height:30px;border:0;background:transparent;color:var(--ink);font-size:18px;cursor:pointer}
+.step span{min-width:26px;text-align:center}
+.add{flex:1;border:0;border-radius:4px;background:var(--ink);color:var(--bg);padding:7px 10px;font:inherit;font-weight:700;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+section.panel{margin:24px 0;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px}
+h2{font:900 20px/1.3 "Noto Serif TC",serif;margin:0 0 12px}
+.sel{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.sel .nm{flex:1;min-width:140px}
+.sub{color:var(--sub);font-size:13px}
+.x{border:0;background:transparent;color:var(--acc);cursor:pointer;font:inherit}
+.sum{display:flex;justify-content:space-between;padding-top:8px}
+.sum.big{font-size:18px;font-weight:700;border-top:1px solid var(--line);margin-top:8px}
+.opt{display:flex;gap:10px;padding:8px 0;cursor:pointer;align-items:flex-start}
+.opt input{margin-top:6px;accent-color:var(--acc)}
+.acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.acts button{border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:4px;padding:9px 16px;font:inherit;cursor:pointer}
+.acts .pri{background:var(--ink);color:var(--bg);font-weight:700}
+.empty{color:var(--sub);padding:8px 0}
+.bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 10px 8px 20px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.35);display:flex;align-items:center;gap:14px;white-space:nowrap;max-width:calc(100% - 24px)}
+.bar button{border:1px solid var(--bg);background:transparent;color:var(--bg);border-radius:999px;padding:6px 12px;font:inherit;cursor:pointer}
+#toast{position:fixed;left:50%;bottom:140px;transform:translateX(-50%);background:var(--acc);color:#fff;padding:8px 16px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1 id="title"></h1><p id="sub"></p><div class="notice" id="notice"></div></header>
+<div class="grid" id="grid" style="margin-top:18px"></div>
+<section class="panel" id="selPanel">
+  <h2>你的選擇</h2>
+  <div id="sel"></div>
+  <div class="sum"><span>商品小計</span><span id="sub1">NT$0</span></div>
+  <div class="sum"><span>包材費（每單）</span><span id="fee">NT$0</span></div>
+  <div class="sum big"><span>應付總額</span><span id="total">NT$0</span></div>
+</section>
+<section class="panel">
+  <h2>取貨方式</h2>
+  <div id="picks"></div>
+  <p class="sub" id="pickHint"></p>
+  <div class="acts"><button class="pri" id="send">送出訂單</button><button id="copy">複製訂單內容</button><button id="reset">全部清除</button></div>
+  <p class="sub">按「送出訂單」會開啟 Google 表單，訂單內容已自動填好，請再填寫姓名與聯絡方式後送出。</p>
+</section>
+</div>
+<div class="bar"><span id="barTxt"></span><button id="toSel">查看選擇</button></div>
+<div id="toast" role="status"></div>
+
+<script>
+/* ===== 在這裡改成你自己的內容 ===== */
+const CONFIG = {
+  title: "Passion Pop-up 代購",
+  sub: "選好商品與取貨方式，送出後到表單填寫聯絡資料",
+  notice: [
+    "此為現地代購，商品價格不須二補，預計11月上旬至中旬抵台後出貨。每單酌收包材費10元。",
+    "填單送出後，後續會另行私噗聯絡付款事宜，[[須先付商品款項全額]]，若有缺貨或售完，會進行全額退款",
+    "為避免爭議，隨機商品一律不拆封出貨，現場抽卡Lucky Draw 以隨機出貨，無法指定款式。",
+    "商品數量若有限額，將以「收到款項」的順序為主",
+    "本次僅以「事前代購」方式進行，無「缺A就不要B」，填單並確認後就不接受臨時刪減商品內容",
+    "因人力有限，會視情況隨時截止收單。滿額贈品一律隨機給予，一切數量、款式皆以主辦實際提供與規則為主",
+    "商品皆默認廠損，國際運送也可能存在損傷風險。此為代購性質，恕無法提供退換貨，請確認理解後再喊單，未盡事宜以我方解釋與說明為主",
+    "有任何疑問都可至原噗留言或私噗詢問！"
+  ],
+  currency: "NT$",
+  packFee: 10,   // 每單包材費
+  // Google 表單：url＝預先填入連結中 ?usp=pp_url 前面的網址；entry＝訂單內容欄位代碼，例如 "entry.1234567890"
+  form: { url: "https://docs.google.com/forms/d/e/1FAIpQLSe-Z4Ke-UL6zknvjt8330JsC8mKOmza4zos4kp5_vlsSL_lkw/viewform", entry: "entry.1143600465", detailEntry: "entry.1999335788", pickupEntry: "entry.1000417828" },
+  pickups: [
+    { name: "北捷面交（賣家單一時段）", hint: "賣家指定單一時段，下單後會再通知時間與站點。" },
+    { name: "7-11 交貨便（運費依商品保值金額）" },
+    { name: "賣貨便開20元賣場（貨到付款，買家自行承擔相關風險）" },
+    { name: "全額匯款後提供寄件編號" }
+  ],
+  // price: 填台幣價格（留 null 會顯示「價格待填」）　limit: 代購總量（全部客人合計）　limitPer: "item"＝整件合計、"design"＝每款各自
+  // variants: 款式（省略＝基本）　random: 隨機商品　note: 特別備註（例如需補款）　image: 商品圖片路徑（可不寫副檔名，會自動嘗試 webp/jfif/jpg/png）　soldOut: true＝標示已售完並鎖住（改完要重新部署）　要刪除的商品直接刪掉那一行
+  items: [
+    { image: "images/01", soldOut: false, name: "婚禮立牌", price: 1000, limit: 3 },
+    { image: "images/02", soldOut: false, name: "光柵明信片相框組", price: 300, limit: 2 },
+    { image: "images/04", soldOut: false, name: "Q版飯友立牌", price: 390, variants: ["A", "B", "C", "D"] },
+    { image: "images/06", soldOut: false, name: "隨機卡包 #01", price: 110, random: true },
+    { image: "images/07", soldOut: false, name: "隨機卡包 #02", price: 110, random: true },
+    { image: "images/08", soldOut: false, name: "變溫明信片組", price: 580, limit: 2 },
+    { image: "images/09", soldOut: false, name: "明信片組", price: 320 },
+    { image: "images/10", soldOut: false, name: "金屬徽章", price: 670 },
+    { image: "images/11", soldOut: false, name: "隨機徽章", price: 130, random: true },
+    { image: "images/12", soldOut: false, name: "迷你透視立牌", price: 300, variants: ["A", "B"] },
+    { image: "images/13", soldOut: false, name: "旋轉立牌", price: 550, limit: 3 },
+    { image: "images/14", soldOut: false, name: "童年立牌組", price: 670 },
+    { image: "images/15", soldOut: false, name: "UNHRDO 個人立牌", price: 520, variants: ["A", "B"] },
+    { image: "images/16", soldOut: false, name: "旋轉鑰匙圈", price: 420, limit: 3, limitPer: "design", variants: ["A", "B"] },
+    { image: "images/17", soldOut: false, name: "壓克力磚", price: 820, limit: 5, limitPer: "design", variants: ["A", "B", "C"] },
+    { image: "images/18", soldOut: false, name: "手帕組", price: 480, limit: 4 },
+    { image: "images/19", soldOut: false, name: "底片鑰匙圈", price: 530, limit: 5, limitPer: "design", variants: ["A", "B", "C", "D"] },
+    { image: "images/20", soldOut: false, name: "鍵盤墊", price: 870, limit: 3 },
+    { image: "images/21", soldOut: false, name: "鍵帽組", price: 4000, limit: 1 },
+    { image: "images/23", soldOut: false, name: "螢幕公仔", price: 490, variants: ["A", "B", "C", "D"] },
+    { image: "images/24", soldOut: false, name: "15cm 娃娃", price: 850, limit: 1, limitPer: "design", variants: ["A", "B"] },
+    { image: "images/25", soldOut: false, name: "娃衣", price: 620, limit: 3, limitPer: "design", variants: ["A", "B", "C", "D"] },
+    { image: "images/26", soldOut: false, name: "隨機捏捏吊飾", price: 400, limit: 6, random: true },
+    { image: "images/27", soldOut: false, name: "Lucky Draw 小卡", price: 130, random: true, hint: "每抽 NT$130，隨機給予，無法指定款式" }
+  ]
+};
+/* ===== 以下為程式，通常不用改 ===== */
+const $ = id => document.getElementById(id);
+const fmt = n => CONFIG.currency + n.toLocaleString("en-US");
+const V = it => it.variants || ["基本"];
+const cart = {}, draft = {};
+let filter = "all", pick = null;
+const FILTERS = [["all", "全部"], ["limit", "有限購"], ["random", "隨機"], ["pick", "可選款式"]];
+CONFIG.items.forEach((it, i) => draft[i] = { v: V(it)[0], q: 1 });
+document.title = CONFIG.title;
+$("title").textContent = CONFIG.title; $("sub").textContent = CONFIG.sub; $("notice").innerHTML = "<ul style='margin:0;padding:0;list-style:none'>" + CONFIG.notice.map(t => "<li style='padding:3px 0'>🍺 " + t.replace(/\[\[(.+?)\]\]/g, "<mark>$1</mark>") + "</li>").join("") + "</ul>";
+
+function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2000); }
+const inCart = i => Object.entries(cart).filter(([k]) => +k.split("|")[0] === i);
+function room(i, v) {
+  const it = CONFIG.items[i];
+  if (it.soldOut) return 0;
+  if (it.limit == null) return Infinity;
+  return it.limitPer === "design" ? it.limit - (cart[i + "|" + v] || 0) : it.limit - inCart(i).reduce((a, [, q]) => a + q, 0);
+}
+const limitText = it => it.limit == null ? "" : (it.limitPer === "design" ? `每款代購總量 ${it.limit} 個` : `代購總量 ${it.limit} 個`);
+const visible = it => filter === "all" || (filter === "limit" && it.limit != null) || (filter === "random" && it.random) || (filter === "pick" && V(it).length > 1);
+const priceText = it => it.price == null ? `<span class="tag n">價格待填</span>` : `<span class="price">${fmt(it.price)}</span>`;
+const label = (it, v) => V(it).length > 1 ? `${it.name} ${v}` : it.name;
+
+const EXTS = ["webp", "jfif", "jpg", "png", "jpeg", "WEBP", "JFIF", "JPG", "PNG", "JPEG"];
+function imgFail(el) { const n = +el.dataset.n + 1; if (!el.dataset.b || n >= EXTS.length) { el.remove(); return; } el.dataset.n = n; el.src = el.dataset.b + "." + EXTS[n]; }
+function renderTabs() { $("tabs").innerHTML = FILTERS.map(([k, l]) => `<button data-f="${k}" aria-pressed="${filter === k}">${l}</button>`).join(""); }
+function renderGrid() {
+  $("grid").innerHTML = CONFIG.items.map((it, i) => {
+    if (!visible(it)) return "";
+    const d = draft[i];
+    const chips = V(it).length > 1 ? `<div class="chips">${V(it).map(v => `<button data-v="${v}" data-i="${i}" aria-pressed="${d.v === v}">${v}</button>`).join("")}</div>` : "";
+    const tags = (it.soldOut ? `<span class="tag" style="background:var(--ink);color:var(--bg)">已售完</span>` : "") + (it.limit != null ? `<span class="tag">${limitText(it)}</span>` : "") + (it.random ? `<span class="tag n">隨機</span>` : "") + (it.note ? `<span class="tag">備註：${it.note}</span>` : "");
+    const hasExt = it.image && /\.\w+$/.test(it.image);
+    const img = it.image ? `<img src="${hasExt ? it.image : it.image + "." + EXTS[0]}" ${hasExt ? "" : `data-b="${it.image}" data-n="0"`} alt="${it.name}" loading="lazy" onerror="imgFail(this)">` : "";
+    return `<div class="item${it.soldOut ? " sold" : ""}">${img}<h3>${it.name}</h3><div>${priceText(it)} ${tags}</div>${it.hint ? `<div class="sub" style="color:var(--acc);font-weight:700">${it.hint}</div>` : ""}${chips}
+      <div class="row"><span class="step"><button data-dq="-1" data-i="${i}" aria-label="減少">−</button><span>${d.q}</span><button data-dq="1" data-i="${i}" aria-label="增加">+</button></span>
+      <button class="add" data-add="${i}" ${it.soldOut ? "disabled" : ""}>${it.soldOut ? "已售完" : "加入購物車"}</button></div></div>`;
+  }).join("");
+}
+function summary() {
+  let sub = 0, count = 0;
+  for (const [k, q] of Object.entries(cart)) { sub += (CONFIG.items[+k.split("|")[0]].price || 0) * q; count += q; }
+  const fee = count ? CONFIG.packFee : 0;
+  return { sub, count, fee, total: sub + fee };
+}
+function renderSel() {
+  const s = summary();
+  $("sel").innerHTML = Object.entries(cart).map(([k, q]) => {
+    const [i, v] = k.split("|"), it = CONFIG.items[+i], p = it.price || 0;
+    return `<div class="sel"><div class="nm">${label(it, v)}<div class="sub">${it.price == null ? "價格待填" : fmt(p) + " × " + q + "＝" + fmt(p * q)}</div></div>
+      <span class="step"><button data-cq="-1" data-k="${k}" aria-label="減少">−</button><span>${q}</span><button data-cq="1" data-k="${k}" aria-label="增加">+</button></span>
+      <button class="x" data-del="${k}">刪除</button></div>`;
+  }).join("") || `<div class="empty">還沒有選擇商品，從上方清單加入吧。</div>`;
+  $("sub1").textContent = fmt(s.sub); $("fee").textContent = fmt(s.fee); $("total").textContent = fmt(s.total);
+  $("barTxt").textContent = `已選 ${s.count} 件 · ${fmt(s.total)}`;
+}
+function renderPicks() {
+  $("picks").innerHTML = CONFIG.pickups.map((p, i) => `<label class="opt"><input type="radio" name="pk" value="${i}" ${pick === i ? "checked" : ""}><span>${p.name}</span></label>`).join("");
+  $("pickHint").textContent = pick != null ? (CONFIG.pickups[pick].hint || "") : "";
+}
+function setQty(k, q) {
+  const [i, v] = k.split("|"), cur = cart[k] || 0;
+  if (q > cur && q - cur > room(+i, v)) return toast("已達代購總量上限");
+  if (q <= 0) delete cart[k]; else cart[k] = q;
+  renderSel(); renderGrid();
+}
+function orderText() {
+  const s = summary();
+  const lines = Object.entries(cart).map(([k, q]) => {
+    const [i, v] = k.split("|"), it = CONFIG.items[+i];
+    return `${label(it, v)} × ${q}　${it.price == null ? "價格待填" : fmt(it.price * q)}`;
+  });
+  return ["【代購訂單】", ...lines, "", `商品小計：${fmt(s.sub)}`, `包材費：${fmt(s.fee)}`, `應付總額：${fmt(s.total)}`, `取貨方式：${pick != null ? CONFIG.pickups[pick].name : "（未選擇）"}`].join("\n");
+}
+function detailText() { return Object.entries(cart).map(([k, q]) => { const [i, v] = k.split("|"); return CONFIG.items[+i].name + ":" + v + ":" + q; }).join(";"); }
+function ready() {
+  if (!summary().count) { toast("還沒有選擇商品"); return false; }
+  if (pick == null) { toast("請先選擇取貨方式"); return false; }
+  return true;
+}
+function copyText(text, msg) {
+  const fb = () => { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(msg); } catch (_) { toast("複製失敗，請手動選取"); } ta.remove(); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(() => toast(msg), fb); else fb();
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const d = b.dataset;
+  if (d.f) { filter = d.f; renderTabs(); renderGrid(); }
+  else if (d.v) { draft[d.i].v = d.v; renderGrid(); }
+  else if (d.dq) { draft[d.i].q = Math.max(1, draft[d.i].q + +d.dq); renderGrid(); }
+  else if (d.add != null) {
+    const i = +d.add, { v, q } = draft[i], k = i + "|" + v, r = room(i, v);
+    if (r <= 0) return toast("已達代購總量上限");
+    const n = Math.min(q, r);
+    if (n < q) toast(`超過代購總量，只加入 ${n} 個`);
+    cart[k] = (cart[k] || 0) + n; draft[i].q = 1; renderSel(); renderGrid();
+  }
+  else if (d.cq) setQty(d.k, (cart[d.k] || 0) + +d.cq);
+  else if (d.del) { delete cart[d.del]; renderSel(); renderGrid(); }
+});
+document.addEventListener("change", e => { if (e.target.name === "pk") { pick = +e.target.value; renderPicks(); } });
+$("reset").onclick = () => { for (const k in cart) delete cart[k]; pick = null; renderSel(); renderGrid(); renderPicks(); };
+$("toSel").onclick = () => $("selPanel").scrollIntoView({ behavior: "smooth" });
+$("copy").onclick = () => { if (ready()) copyText(orderText(), "已複製訂單內容"); };
+$("send").onclick = () => {
+  if (!ready()) return;
+  const text = orderText(), f = CONFIG.form;
+  if (!f.url || !f.entry) { copyText(text, "尚未設定表單，已複製訂單內容"); return; }
+  let url = f.url + (f.url.includes("?") ? "&" : "?") + "usp=pp_url&" + f.entry + "=" + encodeURIComponent(text);
+  if (f.detailEntry) url += "&" + f.detailEntry + "=" + encodeURIComponent(detailText());
+  if (f.pickupEntry) url += "&" + f.pickupEntry + "=" + encodeURIComponent(CONFIG.pickups[pick].name);
+  const w = window.open(url, "_blank");
+  if (!w) { copyText(text + "\n\n明細：" + detailText(), "無法開啟表單，已複製訂單內容"); }
+};
+renderGrid(); renderSel(); renderPicks();
+</script>
+</body>
+</html>
